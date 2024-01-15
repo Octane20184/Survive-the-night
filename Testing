@@ -1,0 +1,721 @@
+loadstring(game:HttpGet(("https://raw.githubusercontent.com/REDzHUB/LibraryV2/main/redzLib")))()
+
+MakeWindow({
+  Hub = {
+    Title = "Krypton | Survive The Night",
+    Animation = "by : merchantxyy"
+  },
+  Key = {
+    KeySystem = false,
+    Title = "Key System",
+    Description = "",
+    KeyLink = "",
+    Keys = { "1234" },
+    Notifi = {
+      Notifications = true,
+      CorrectKey = "Running the Script...",
+      Incorrectkey = "The key is incorrect",
+      CopyKeyLink = "Copied to Clipboard"
+    }
+  }
+})
+
+MinimizeButton({
+  Image = "",
+  Size = { 40, 40 },
+  Color = Color3.fromRGB(10, 10, 10),
+  Corner = true,
+  Stroke = true,
+  StrokeColor = Color3.fromRGB(255, 0, 0)
+})
+
+local Main = MakeTab({ Name = "Basic/Info" })
+
+MakeNotifi({
+  Title = "WARNING",
+  Text = "To use player functions enable anti-kick from infinite yield",
+  Time = 10
+})
+
+
+
+AddButton(Main, {
+  Name = "Infinite yield FE, enter antikick in IY",
+  Callback = function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+  end
+})
+
+local Slider = AddSlider(Main, {
+  Name = "WalkSpeed",
+  MinValue = 5,
+  MaxValue = 100,
+  Default = 14,
+  Increase = 1,
+  Callback = function(Value)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
+  end
+})
+
+local Slider = AddSlider(Main, {
+  Name = "JumpPower",
+  MinValue = 5,
+  MaxValue = 100,
+  Default = 50,
+  Increase = 1,
+  Callback = function(Value)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+  end
+})
+
+
+local Slider = AddSlider(Main, {
+  Name = "Gravity",
+  MinValue = 50,
+  MaxValue = 500,
+  Default = 196.2,
+  Increase = 1,
+  Callback = function(Value)
+    game.Workspace.Gravity = Value
+  end
+})
+
+AddButton(Main, {
+  Name = "Invisibility - don't spam or anticheat kicks, keybind = E",
+  Callback = function()
+        
+local ScriptStarted = false
+local Keybind = "E" --Set to whatever you want, has to be the name of a KeyCode Enum.
+local Transparency = true --Will make you slightly transparent when you are invisible. No reason to disable.
+local NoClip = true --Will make your fake character no clip.
+
+local Player = game:GetService("Players").LocalPlayer
+local RealCharacter = Player.Character or Player.CharacterAdded:Wait()
+
+local IsInvisible = false
+
+RealCharacter.Archivable = true
+local FakeCharacter = RealCharacter:Clone()
+local Part
+Part = Instance.new("Part", workspace)
+Part.Anchored = true
+Part.Size = Vector3.new(200, 1, 200)
+Part.CFrame = CFrame.new(0, -500, 0) --Set this to whatever you want, just far away from the map.
+Part.CanCollide = true
+FakeCharacter.Parent = workspace
+FakeCharacter.HumanoidRootPart.CFrame = Part.CFrame * CFrame.new(0, 5, 0)
+
+for i, v in pairs(RealCharacter:GetChildren()) do
+  if v:IsA("LocalScript") then
+      local clone = v:Clone()
+      clone.Disabled = true
+      clone.Parent = FakeCharacter
+  end
+end
+if Transparency then
+  for i, v in pairs(FakeCharacter:GetDescendants()) do
+      if v:IsA("BasePart") then
+          v.Transparency = 0.7
+      end
+  end
+end
+local CanInvis = true
+function RealCharacterDied()
+  CanInvis = false
+  RealCharacter:Destroy()
+  RealCharacter = Player.Character
+  CanInvis = true
+  isinvisible = false
+  FakeCharacter:Destroy()
+  workspace.CurrentCamera.CameraSubject = RealCharacter.Humanoid
+
+  RealCharacter.Archivable = true
+  FakeCharacter = RealCharacter:Clone()
+  Part:Destroy()
+  Part = Instance.new("Part", workspace)
+  Part.Anchored = true
+  Part.Size = Vector3.new(200, 1, 200)
+  Part.CFrame = CFrame.new(9999, 9999, 9999) --Set this to whatever you want, just far away from the map.
+  Part.CanCollide = true
+  FakeCharacter.Parent = workspace
+  FakeCharacter.HumanoidRootPart.CFrame = Part.CFrame * CFrame.new(0, 5, 0)
+
+  for i, v in pairs(RealCharacter:GetChildren()) do
+      if v:IsA("LocalScript") then
+          local clone = v:Clone()
+          clone.Disabled = true
+          clone.Parent = FakeCharacter
+      end
+  end
+  if Transparency then
+      for i, v in pairs(FakeCharacter:GetDescendants()) do
+          if v:IsA("BasePart") then
+              v.Transparency = 0.7
+          end
+      end
+  end
+ RealCharacter.Humanoid.Died:Connect(function()
+ RealCharacter:Destroy()
+ FakeCharacter:Destroy()
+ end)
+ Player.CharacterAppearanceLoaded:Connect(RealCharacterDied)
+end
+RealCharacter.Humanoid.Died:Connect(function()
+ RealCharacter:Destroy()
+ FakeCharacter:Destroy()
+ end)
+Player.CharacterAppearanceLoaded:Connect(RealCharacterDied)
+local PseudoAnchor
+game:GetService "RunService".RenderStepped:Connect(
+  function()
+      if PseudoAnchor ~= nil then
+          PseudoAnchor.CFrame = Part.CFrame * CFrame.new(0, 5, 0)
+      end
+       if NoClip then
+      FakeCharacter.Humanoid:ChangeState(11)
+       end
+  end
+)
+
+PseudoAnchor = FakeCharacter.HumanoidRootPart
+local function Invisible()
+  if IsInvisible == false then
+      local StoredCF = RealCharacter.HumanoidRootPart.CFrame
+      RealCharacter.HumanoidRootPart.CFrame = FakeCharacter.HumanoidRootPart.CFrame
+      FakeCharacter.HumanoidRootPart.CFrame = StoredCF
+      RealCharacter.Humanoid:UnequipTools()
+      Player.Character = FakeCharacter
+      workspace.CurrentCamera.CameraSubject = FakeCharacter.Humanoid
+      PseudoAnchor = RealCharacter.HumanoidRootPart
+      for i, v in pairs(FakeCharacter:GetChildren()) do
+          if v:IsA("LocalScript") then
+              v.Disabled = false
+          end
+      end
+
+      IsInvisible = true
+  else
+      local StoredCF = FakeCharacter.HumanoidRootPart.CFrame
+      FakeCharacter.HumanoidRootPart.CFrame = RealCharacter.HumanoidRootPart.CFrame
+     
+      RealCharacter.HumanoidRootPart.CFrame = StoredCF
+     
+      FakeCharacter.Humanoid:UnequipTools()
+      Player.Character = RealCharacter
+      workspace.CurrentCamera.CameraSubject = RealCharacter.Humanoid
+      PseudoAnchor = FakeCharacter.HumanoidRootPart
+      for i, v in pairs(FakeCharacter:GetChildren()) do
+          if v:IsA("LocalScript") then
+              v.Disabled = true
+          end
+      end
+      IsInvisible = false
+  end
+end
+
+game:GetService("UserInputService").InputBegan:Connect(
+  function(key, gamep)
+      if gamep then
+          return
+      end
+      if key.KeyCode.Name:lower() == Keybind:lower() and CanInvis and RealCharacter and FakeCharacter then
+          if RealCharacter:FindFirstChild("HumanoidRootPart") and FakeCharacter:FindFirstChild("HumanoidRootPart") then
+              Invisible()
+          end
+      end
+  end
+)
+local Sound = Instance.new("Sound",game:GetService("SoundService"))
+Sound.SoundId = "rbxassetid://232127604"
+Sound:Play()
+game:GetService("StarterGui"):SetCore("SendNotification",{["Title"] = "Invisible Toggle Loaded",["Text"] = "Press "..Keybind.." to become change visibility.",["Duration"] = 20,["Button1"] = "Okay."})
+
+    end
+  })
+
+AddButton(Main, {
+  Name = "Mobile Keyboard",
+  Callback = function()
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/advxzivhsjjdhxhsidifvsh/mobkeyboard/main/main.txt", true))()
+    end
+  })
+
+local Main = MakeTab({ Name = "Visibility" })
+
+
+AddButton(Main, {
+  Name = "ESP",
+  Callback = function()
+    loadstring(game:HttpGet(('https://raw.githubusercontent.com/5carr3d/esp/main/main.lua'), true))()
+  end
+})
+
+
+
+AddButton(Main, {
+  Name = "Make the game bright",
+  Callback = function()
+    -- FULLBRIGHT by ricey#7090
+    pcall(function()
+      local lighting = game:GetService("Lighting");
+      lighting.Ambient = Color3.fromRGB(255, 255, 255);
+      lighting.Brightness = 1;
+      lighting.FogEnd = 1e10;
+      for i, v in pairs(lighting:GetDescendants()) do
+        if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("ColorCorrectionEffect") or v:IsA("SunRaysEffect") then
+          v.Enabled = false;
+        end
+      end
+      lighting.Changed:Connect(function()
+        lighting.Ambient = Color3.fromRGB(255, 255, 255);
+        lighting.Brightness = 1;
+        lighting.FogEnd = 1e10;
+      end);
+      spawn(function()
+        local character = game:GetService("Players").LocalPlayer.Character;
+        while wait() do
+          repeat wait() until character ~= nil
+          if not character.HumanoidRootPart:FindFirstChildWhichIsA("PointLight") then
+            local headlight = Instance.new("PointLight", character.HumanoidRootPart);
+            headlight.Brightness = 1;
+            headlight.Range = 60;
+          end
+        end
+      end);
+    end)
+  end
+})
+
+local Main = MakeTab({ Name = "Special maps" })
+
+local section = AddSection(Main, {"Whiteout - homestead - campfires"})
+
+AddButton(Main, {
+  Name = "Campfire #1 (spawn)",
+  Callback = function()
+      local function teleportToPosition(position)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character.HumanoidRootPart.CFrame = CFrame.new(position)
+    end
+end
+
+teleportToPosition(Vector3.new(336.201752, 5029.51807, 1027.72351, 0.198647603, 9.17488094e-08, 0.980071008, -6.75546161e-08, 1, -7.99220174e-08, -0.980071008, -5.03320052e-08, 0.198647603 ))
+    end
+  })
+
+AddButton(Main, {
+  Name = "Campfire #2",
+  Callback = function()
+      local function teleportToPosition(position)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character.HumanoidRootPart.CFrame = CFrame.new(position)
+    end
+end
+
+teleportToPosition(Vector3.new(151.740189, 5028.20166, 1024.40344, -0.184800327, -1.22231203e-08, 0.982776105, -1.01919388e-08, 1, 1.05208571e-08, -0.982776105, -8.07213585e-09, -0.184800327))
+    end
+  })
+
+AddButton(Main, {
+  Name = "Campfire #3",
+  Callback = function()
+      local function teleportToPosition(position)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character.HumanoidRootPart.CFrame = CFrame.new(position)
+    end
+end
+
+teleportToPosition(Vector3.new(72.1000977, 5033.40186, 815.532898, -0.702464402, -4.54715803e-08, 0.711718857, -3.4037086e-08, 1, 3.02953005e-08, -0.711718857, -2.94346547e-09, -0.702464402))
+    end
+  })
+
+AddButton(Main, {
+  Name = "Campfire #4",
+  Callback = function()
+      local function teleportToPosition(position)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character.HumanoidRootPart.CFrame = CFrame.new(position)
+    end
+end
+
+teleportToPosition(Vector3.new(15.4821281, 5032.69531, 593.698975, 0.609578967, 2.71644556e-08, 0.792725325, -2.0044963e-08, 1, -1.88532727e-08, -0.792725325, -4.39759207e-09, 0.609578967))
+    end
+  })
+      
+AddButton(Main, {
+  Name = "Campfire #5",
+  Callback = function()
+local function teleportToPosition(position)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character.HumanoidRootPart.CFrame = CFrame.new(position)
+    end
+end
+
+teleportToPosition(Vector3.new(260.846436, 5028.20166, 607.876953, -0.999561071, -6.7118755e-09, 0.0296244044, -6.32627506e-09, 1, 1.31100419e-08, -0.0296244044, 1.29168756e-08, -0.999561071))
+    end
+  })
+
+AddButton(Main, {
+  Name = "Campfire #6",
+  Callback = function()
+   local function teleportToPosition(position)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character.HumanoidRootPart.CFrame = CFrame.new(position)
+    end
+end
+
+teleportToPosition(Vector3.new(247.634384, 5028.20166, 790.581787, -0.759328723, 5.6433862e-08, -0.650707245, 3.04902876e-08, 1, 5.114698e-08, 0.650707245, 1.89971185e-08, -0.759328723
+))
+    end
+  })
+
+local Main = MakeTab({ Name = "Maps" })
+
+local section = AddSection(Main, {"Graveyard - Teleports"})
+
+AddButton(Main, {
+  Name = "Possible generator location 1",
+  Callback = function()
+      local function teleportToPosition(position)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character.HumanoidRootPart.CFrame = CFrame.new(position)
+    end
+end
+
+teleportToPosition(Vector3.new(352.78595, 5013.79492, 823.591125, 0.129390433, -0.189167768, 0.973382592, -1.34248912e-09, 0.981634498, 0.190771446, -0.991593719, -0.0246840026, 0.127014115))
+    end
+  })
+
+AddButton(Main, {
+  Name = "Possible generator location 2",
+  Callback = function()
+      local function teleportToPosition(position)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character.HumanoidRootPart.CFrame = CFrame.new(position)
+    end
+end
+
+teleportToPosition(Vector3.new(355.617981, 5005.04541, 1088.54468, -0.532541573, -0.091707468, 0.841420949, 5.4497189e-09, 0.994112849, 0.108349547, -0.846403837, 0.0577006415, -0.529406428
+))
+    end
+  })
+
+AddButton(Main, {
+  Name = "possible generator location 3",
+  Callback = function()
+      local function teleportToPosition(position)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character.HumanoidRootPart.CFrame = CFrame.new(position)
+    end
+end
+
+teleportToPosition(Vector3.new(176.511292, 5005.96094, 1175.44714, 0.999544859, 0.00319049181, -0.0299974326, 5.48681101e-10, 0.994391441, 0.105762325, 0.0301666241, -0.105714194, 0.993938863))
+    end
+  })
+
+
+
+
+      AddButton(Main, {
+  Name = "Possible generator location 4",
+  Callback = function()
+local function teleportToPosition(position)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character.HumanoidRootPart.CFrame = CFrame.new(position)
+    end
+end
+
+teleportToPosition(Vector3.new(-121.445129, 5003.77979, 1157.8241, -0.292548209, 0.082131058, -0.952717185, -5.1251986e-10, 0.99630475, 0.0858886167, 0.956250787, 0.0251265615, -0.29146716
+))
+    end
+  })
+
+
+
+            AddButton(Main, {
+  Name = "Possible generator location 5",
+  Callback = function()
+local function teleportToPosition(position)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+
+    if character and character:FindFirstChild("HumanoidRootPart") then
+        character.HumanoidRootPart.CFrame = CFrame.new(position)
+    end
+end
+
+teleportToPosition(Vector3.new(43.7870178, 5003.59814, 802.405212, -0.957372606, -0.0172777567, 0.288338602, 2.52016297e-09, 0.998209536, 0.0598144792, -0.288855791, 0.0572647452, -0.955658436))
+    end
+  })
+
+local section = AddSection(Main, {"Asylum - teleports"})
+
+AddButton(Main, {
+  Name = "Possible lever location 1",
+  Callback = function()
+
+    end
+  })
+AddButton(Main, {
+  Name = "Possible lever location 2",
+  Callback = function()
+
+    end
+  })
+            AddButton(Main, {
+  Name = "Possible lever location 3",
+  Callback = function()
+
+    end
+  })
+
+                AddButton(Main, {
+  Name = "Possible lever location 4",
+  Callback = function()
+
+    end 
+  })
+                        AddButton(Main, {
+  Name = "Possible lever location 5",
+  Callback = function()
+
+    end
+  })
+                              AddButton(Main, {
+  Name = "Possible lever location 6",
+  Callback = function()
+    end
+  })
+                                    AddButton(Main, {
+  Name = "Possible lever location 7",
+  Callback = function()
+
+    end
+  })
+                                          AddButton(Main, {
+  Name = "Possible lever location 8",
+  Callback = function()
+   
+ end
+  })
+                                                AddButton(Main, {
+  Name = "Possible lever location 9",
+  Callback = function()
+    
+end
+  })
+
+                                                      AddButton(Main, {
+  Name = "Possible lever location 10",
+  Callback = function()
+
+    end
+  })
+
+local section = AddSection(Main, {"Downtown - teleports"})
+
+
+
+
+
+local section = AddSection(Main, {"sewers - teleports"})
+
+
+
+                                                          end
+                                                        })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+local Main = MakeTab({ Name = "Developers" })
+
+AddButton(Main, {
+  Name = "Enable developer mode",
+  Callback = function()
+      -- Load redzLib
+loadstring(game:HttpGet("https://raw.githubusercontent.com/REDzHUB/LibraryV2/main/redzLib"))()
+
+MakeWindow({
+    Hub = {
+        Title = "Krypton | Developers",
+        Animation = "by : merchantxyy"
+    },
+    Key = {
+        KeySystem = false,
+        Title = "Krypton key system",
+        Description = "complete the key system to progress further",
+        KeyLink = "",
+        Keys = {"CKEY73928-9393TCY"},
+        Notifi = {
+            Notifications = true,
+            CorrectKey = "Running the Script...",
+            Incorrectkey = "The key is incorrect",
+            CopyKeyLink = "Copied to Clipboard"
+        }
+    }
+})
+
+MinimizeButton({
+    Image = "rbxassetid://7733914320",
+    Size = {40, 40},
+    Color = Color3.fromRGB(0, 0, 0),
+    Corner = true,
+    Stroke = true,
+    StrokeColor = Color3.fromRGB(196, 180, 84)
+})
+
+local player = game.Players.LocalPlayer
+
+-- Create a tab named "CFrame/Player" and add buttons to copy the current CFrame and update WalkSpeed/JumpPower
+local Main = MakeTab({Name = "CFrame/Player"})
+
+AddButton(Main, {
+    Name = "Copy Current CFrame",
+    Callback = function()
+        if player.Character then
+            local currentCFrame = player.Character:WaitForChild("HumanoidRootPart").CFrame
+            setclipboard(tostring(currentCFrame))
+            print("CFrame copied to clipboard: " .. tostring(currentCFrame))
+        else
+            warn("Player's character not found.")
+        end
+    end
+})
+
+-- Create and set up the UI label for WalkSpeed
+local WalkspeedLabel = AddTextLabel(Main, "Walkspeed")
+SetLabel(WalkspeedLabel, "Walkspeed")
+
+-- Create and set up the UI label for JumpPower
+local JumpPowerLabel = AddTextLabel(Main, "JumpPower")
+SetLabel(JumpPowerLabel, "JumpPower")
+
+-- Create a button to update WalkSpeed and JumpPower
+AddButton(Main, {
+    Name = "Update WalkSpeed/JumpPower",
+    Callback = function()
+        if player.Character then
+            local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                WalkspeedLabel.Text = "Walkspeed: " .. tostring(humanoid.WalkSpeed)
+                JumpPowerLabel.Text = "JumpPower: " .. tostring(humanoid.JumpPower)
+            end
+        end
+    end
+})
+
+-- Create and set up the UI label for FPS
+local FPSLabel = AddTextLabel(Main, "FPS")
+SetLabel(FPSLabel, "FPS: Loading...")
+
+-- Function to update the FPS label
+local function updateFPSLabel()
+    local fps = tostring(math.floor(workspace:GetRealPhysicsFPS()))
+    FPSLabel.Text = "FPS: " .. fps
+end
+
+-- Connect the update function to the Heartbeat event
+game:GetService("RunService").Heartbeat:Connect(updateFPSLabel)
+
+-- Initial update of the FPS label
+updateFPSLabel()
+
+-- Function to update the UI labels
+local function updateLabels()
+    if player.Character then
+        local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            WalkspeedLabel.Text = "Walkspeed: " .. tostring(humanoid.WalkSpeed)
+            JumpPowerLabel.Text = "JumpPower: " .. tostring(humanoid.JumpPower)
+        end
+    end
+end
+
+-- Connect the update function to character added event
+player.CharacterAdded:Connect(updateLabels)
+
+-- Connect the update function to character child added event
+player.ChildAdded:Connect(function(child)
+    if child:IsA("Model") then
+        child.ChildAdded:Connect(updateLabels)
+    end
+end)
+
+-- Connect the update functions to the WalkSpeed and JumpPower properties
+player.CharacterAdded:Connect(function()
+    local humanoid = player.Character:WaitForChild("Humanoid")
+    humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
+        updateLabels()
+    end)
+    humanoid:GetPropertyChangedSignal("JumpPower"):Connect(function()
+        updateLabels()
+    end)
+end)
+
+-- Initial update of the UI labels
+updateLabels()
+
+local Main = MakeTab({Name = "Game tools"})
+
+AddButton(Main, {
+  Name = "Hydroxide",
+  Callback = function()
+          end
+        })
+        end
+      })
